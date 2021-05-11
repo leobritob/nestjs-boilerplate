@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  boilerplate_database:
+    container_name: boilerplate_database
+    image: mariadb
+    environment:
+      - MYSQL_ROOT_PASSWORD=${TYPEORM_PASSWORD}
+      - MYSQL_ALLOW_EMPTY_PASSWORD=false
+      - MYSQL_DATABASE=${TYPEORM_DATABASE}
+    ports:
+      - 3306:3306
+    volumes:
+      - boilerplate_volume_default:/var/lib/mysql
+    networks:
+      - boilerplate_network_default
+
+  boilerplate_api:
+    container_name: boilerplate_api
+    build: .
+    env_file: .env
+    ports:
+      - 3333:3333
+    networks:
+      - boilerplate_network_default
+    depends_on:
+      - boilerplate_database
+
+volumes:
+  boilerplate_volume_default:
+
+networks:
+  boilerplate_network_default:
